@@ -59,17 +59,20 @@ async def select_days(page, pageargs):
                                     # 등록일 요소 찾기
                                     date_element = await page.query_selector('tr:has(th:text-is("등록일")) td.ta_l')
                                     meal_element = await page.query_selector('tr:has(th:text-is("급식")) td.ta_l')
+                                    menu = await page.query_selector('tr:has(th:text-is("식단")) td.ta_l')
                                     if date_element and meal_element:
                                         date_text = await date_element.text_content()
                                         meal_text = await meal_element.text_content()
                                         # 날짜와 요일 분리
                                         date_part, day_part = date_text.strip().split(' ', 1)
                                         meal_part = meal_text.strip()
-                                        file_name = f"{date_part}_{day_part}_{meal_part}.jpg"
+                                        file_name = f"{date_part}_{day_part}_{meal_part}"
                                         file_name = file_name.replace(" ", "_")
+                                        img_file_name=file_name+".jpg"
+                                        json_file_name=file_name+".json"
 
-                                        # 이미지 다운로드
-                                        await download_image(page, img_url, pageargs.school_name, file_name)
+                                        # 이미지 및 정보 다운로드
+                                        await download_image(page, img_url, pageargs.school_name, img_file_name)
 
                                 # 팝업 닫기
                                 close_button = await page.query_selector('button[onclick="fnLayerPopupClose();"]')
